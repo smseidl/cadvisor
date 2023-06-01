@@ -55,7 +55,7 @@ docker buildx inspect cadvisor-builder > /dev/null \
 # Build binaries
 
 # A mapping of the docker arch name to the qemu arch name
-declare -A arches=( ["amd64"]="x86_64" ["arm"]="arm" ["arm64"]="aarch64")
+declare -A arches=( ["amd64"]="x86_64" ["arm"]="arm" ["arm64"]="aarch64" ["s390x"]="s390x")
 
 for arch in "${arches[@]}"; do
   if ! hash "qemu-${arch}-static"; then
@@ -69,7 +69,7 @@ for arch in "${arches[@]}"; do
 done
 
 for arch in "${!arches[@]}"; do
-  GOARCH="$arch" OUTPUT_NAME_WITH_ARCH="true" build/build.sh
+  GOARCH="$arch" GO_CGO_ENABLED="0" OUTPUT_NAME_WITH_ARCH="true" build/build.sh
   arch_specific_image="${image_name}-${arch}:${VERSION}"
   docker buildx build --platform "linux/${arch}" --build-arg VERSION="$VERSION" -f deploy/Dockerfile -t "$arch_specific_image"  --progress plain --push .
   docker manifest create --amend "$final_image" "$arch_specific_image"

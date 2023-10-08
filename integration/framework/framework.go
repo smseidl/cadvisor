@@ -213,14 +213,14 @@ func (f *realFramework) ClientV2() *v2.Client {
 
 func (a dockerActions) RunPause() string {
 	return a.Run(DockerRunArgs{
-		Image: "kubernetes/pause",
+		Image: "registry.k8s.io/pause",
 	})
 }
 
 // Run the specified command in a Docker busybox container.
 func (a dockerActions) RunBusybox(cmd ...string) string {
 	return a.Run(DockerRunArgs{
-		Image: "busybox",
+		Image: "registry.k8s.io/busybox",
 	}, cmd...)
 }
 
